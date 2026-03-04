@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../services/supabase'
 import { useAuth } from '../context/AuthContext'
-import { ChevronLeft, Play, CheckCircle2, Circle, Trophy, Calendar, CheckCircle, BarChart2, Edit3, StickyNote, Clock } from 'lucide-react'
+import { ChevronLeft, Play, CheckCircle2, Circle, Trophy, Calendar, CheckCircle, BarChart2, Edit3, StickyNote, Clock, Target } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import QuizMode from '../components/QuizMode'
 
 const Playlist = () => {
     const { id } = useParams()
@@ -18,6 +19,7 @@ const Playlist = () => {
     const [isSaving, setIsSaving] = useState(false)
     const [lastSaved, setLastSaved] = useState(null)
     const [toast, setToast] = useState(null)
+    const [quizMode, setQuizMode] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -466,11 +468,22 @@ const Playlist = () => {
                                         </button>
                                     </div>
 
-                                    {/* UPGRADE 2: Progress bar below title */}
+                                    {/* Progress bar + Quiz Mode button */}
                                     <div className="playlist-progress-section">
-                                        <div className="prog-text">
+                                        <div className="prog-text" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <span>Progress</span>
-                                            <span>{completedCount} / {videos.length}</span>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                <span>{completedCount} / {videos.length}</span>
+                                                <motion.button
+                                                    className="quiz-mode-btn"
+                                                    onClick={() => setQuizMode(true)}
+                                                    whileHover={{ scale: 1.04 }}
+                                                    whileTap={{ scale: 0.97 }}
+                                                >
+                                                    <Target size={13} />
+                                                    Quiz Mode
+                                                </motion.button>
+                                            </div>
                                         </div>
                                         <div className="prog-bar-track">
                                             <div className="prog-bar-fill" style={{ width: `${progressPercent}%` }} />
@@ -578,6 +591,19 @@ const Playlist = () => {
                     >
                         {toast}
                     </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Quiz Mode Overlay */}
+            <AnimatePresence>
+                {quizMode && (
+                    <QuizMode
+                        videos={videos}
+                        playlistTitle={playlist?.title}
+                        userId={user?.id}
+                        playlistId={id}
+                        onClose={() => setQuizMode(false)}
+                    />
                 )}
             </AnimatePresence>
             <style jsx="true">{`
