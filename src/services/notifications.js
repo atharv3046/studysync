@@ -16,14 +16,14 @@ export const requestNotificationPermission = async () => {
 }
 
 // Show a simple notification
-export const showNotification = (title, body, icon = '/vite.svg') => {
+export const showNotification = (title, body, icon = '/icon-512.png') => {
     if (!('Notification' in window) || Notification.permission !== 'granted') return;
 
     try {
         new Notification(title, {
             body,
             icon,
-            badge: '/vite.svg', // Android/Chrome-specific
+            badge: '/icon-192.png', // Android/Chrome-specific
             silent: false
         });
     } catch (err) {
