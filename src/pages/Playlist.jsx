@@ -434,10 +434,19 @@ const Playlist = () => {
                             <span className="hero-badge">Playlist</span>
                             <h1 className="hero-title">{playlist?.title}</h1>
                             <p className="hero-channel">{playlist?.channel_title || 'YouTube Channel'}</p>
-                            <div className="hero-stats">
+                            <div className="hero-stats" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                                 <span>{videos.length} videos</span>
                                 <span className="stat-dot">·</span>
                                 <span>{completedCount} completed ({progressPercent}%)</span>
+                                <motion.button
+                                    className="quiz-mode-btn"
+                                    onClick={() => setQuizMode(true)}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.96 }}
+                                    style={{ marginLeft: 'auto' }}
+                                >
+                                    🎯 Quiz Mode
+                                </motion.button>
                             </div>
                         </div>
                     </div>
