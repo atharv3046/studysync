@@ -9,8 +9,14 @@ const Signup = () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const { signup } = useAuth()
+  const { signup, user } = useAuth()
   const navigate = useNavigate()
+
+  React.useEffect(() => {
+    if (user) {
+      navigate('/dashboard')
+    }
+  }, [user, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -18,10 +24,17 @@ const Signup = () => {
     setLoading(true)
 
     try {
-      const { error: signupError } = await signup(email, password)
+      const { data, error: signupError } = await signup(email, password)
       if (signupError) throw signupError
-      alert('Check your email for confirmation!')
-      navigate('/login')
+
+      // If session is available, redirect to dashboard
+      if (data?.session) {
+        navigate('/dashboard')
+      } else {
+        // Fallback for cases where email confirmation is required
+        alert('Account created! Please check your email for confirmation.')
+        navigate('/login')
+      }
     } catch (err) {
       setError(err.message)
     } finally {
